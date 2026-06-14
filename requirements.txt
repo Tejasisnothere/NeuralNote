@@ -16,3 +16,6 @@ ipykernel
 google-api-python-client
 yt-dlp
 ffmpeg-python
+langchain-huggingface
+scikit-learn
+sentence-transformers

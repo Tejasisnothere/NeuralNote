@@ -17,3 +17,7 @@ First Filtering:
 - tags & categories (if present)
 - rank description higher if it has time wise split descritiopn about what is there in the video
 - could potentially use NLP techniques for faster filtering or use a seperate function backed by LLM 
+
+
+
+rank based on cosine similarity score of title and first 5 lines of description -> use this as a wweight and multiply number of views 
