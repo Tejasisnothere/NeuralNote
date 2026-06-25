@@ -19,3 +19,5 @@ ffmpeg-python
 langchain-huggingface
 scikit-learn
 sentence-transformers
+pinecone
+langchain-pinecone
