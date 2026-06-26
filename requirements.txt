@@ -21,3 +21,4 @@ scikit-learn
 sentence-transformers
 pinecone
 langchain-pinecone
+langchain-qdrant

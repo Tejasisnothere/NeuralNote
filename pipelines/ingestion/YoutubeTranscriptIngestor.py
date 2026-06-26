@@ -1,9 +1,15 @@
 import yt_dlp
-from langchain_huggingface import HuggingFaceEmbeddings
 from sklearn.metrics.pairwise import cosine_similarity
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-import YoutubeTranscriptIngestor
+from youtube_transcript_api import YouTubeTranscriptApi
+import requests
+import os 
+from dotenv import load_dotenv
 
+load_dotenv()
+
+
+API_KEY = os.getenv("TRANSCRIPT_API_KEY")
 
 
 class YTVideoFetcher:
@@ -22,9 +28,9 @@ class YTVideoFetcher:
         self.search_videos()
         self.metadata = self.extract_metadata()
 
-        self.ytt = YoutubeTranscriptIngestor()
+        
 
-        self.transcript_data = {}
+        
 
         
 
@@ -87,43 +93,75 @@ class YTVideoFetcher:
 
         return self.metadata
     
-    def get_transcripts(self):
-        for video in self.metadata:
-            id = video['id']
-            transcript = self.ytt.fetch(id)
-            self.transcript_data[video] = transcript
 
-    def chunk_transcript(self,transcript,max_chars=500):
+    
+    
+    
+    
+
+    def get_transcripts(self)->dict:
+        data = {}
+        for video in self.metadata:
+
+            video_id = video['id']
+            
+            url = 'https://transcriptapi.com/api/v2/youtube/transcript'
+            params = {'video_url': video_id, 'format': 'json'}
+            r = requests.get(url, params=params, headers={'Authorization': f'Bearer {API_KEY}'}, timeout=30)
+            r.raise_for_status()
+            transcript = r.json()['transcript']
+            
+            data[video_id] = transcript
+        
+        return data
+        
+        
+
+    def chunk_transcript(self, data, max_chars=500):
         chunks = []
 
-        current_text = []
-        start_time = None
-        current_len = 0
+        for video_id, transcript in data.items():
 
-        for seg in transcript:
-            text = seg.text
+            current_text = []
+            start_time = None
+            current_len = 0
 
-            if start_time is None:
-                start_time = seg.start
+            for seg in transcript:
 
-            if current_len + len(text) > max_chars:
+                text = seg["text"]
 
-                end_time = seg.start
+                if start_time is None:
+                    start_time = seg["start"]
+
+                if current_len + len(text) > max_chars and current_text:
+
+                    chunks.append({
+                        "text": " ".join(current_text),
+                        "start_time": start_time,
+                        "end_time": seg["start"],
+                        "video_id": video_id
+                    })
+
+                    current_text = []
+                    start_time = seg["start"]
+                    current_len = 0
+
+                current_text.append(text)
+                current_len += len(text)
+
+            # Store the final chunk of this video
+            if current_text:
+                last_seg = transcript[-1]
 
                 chunks.append({
-                    "content": " ".join(current_text),
+                    "text": " ".join(current_text),
                     "start_time": start_time,
-                    "end_time": end_time
+                    "end_time": last_seg["start"] + last_seg["duration"],
+                    "video_id": video_id
                 })
 
-                current_text = []
-                start_time = seg.start
-                
-                current_len = 0
-
-            current_text.append(text)
-            current_len += len(text)
-
         return chunks
-
-        
+    
+    def transcriber_chunker(self):
+        data = self.get_transcripts()
+        return self.chunk_transcript(data)
