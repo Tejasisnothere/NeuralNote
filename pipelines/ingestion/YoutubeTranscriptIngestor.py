@@ -13,24 +13,28 @@ API_KEY = os.getenv("TRANSCRIPT_API_KEY")
 
 
 class YTVideoFetcher:
-    def __init__(self, topic, embedding_model, k=5):
+    def __init__(self, topic, embedding_model, k=20):
         self.embedding_model = embedding_model
         
         self.topic = topic
         
         self.k = k
-        self.imp_params = ['title', 'id', 'description', 'duration', 'view_count', 'like_count', 'webpage_url']
+        self.imp_params = ['title', 'id', 'description', 'duration', 'view_count', 'like_count', 'webpage_url', 'language']
         self.url = f"ytsearch{k}:{self.topic}"
         self.ydl = yt_dlp.YoutubeDL({
             "queit":True
         })
         self.results = []
+        self.lang_check()
+
+
         self.search_videos()
         self.metadata = self.extract_metadata()
 
         
 
-        
+    def lang_check(self):
+        self.results["entries"] = [video for video in self.results["entries"] if video.get("language") == "en"]
 
         
 

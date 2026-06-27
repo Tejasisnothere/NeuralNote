@@ -31,11 +31,13 @@ from qdrant_client import QdrantClient
 
 client = QdrantClient(host="localhost",port=6333)
 
-vector_store = QdrantVectorStore(
+transcript_vector_store = QdrantVectorStore(
     client=client,
     collection_name="YoutubeTranscripts",
     embedding=embedding_model
 )
+
+
 
 
 

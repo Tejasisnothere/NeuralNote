@@ -22,3 +22,6 @@ sentence-transformers
 pinecone
 langchain-pinecone
 langchain-qdrant
+langchain-tavily
+semanticscholar
+trafilatura
