@@ -25,3 +25,9 @@ langchain-qdrant
 langchain-tavily
 semanticscholar
 trafilatura
+paddleocr
+# paddlepaddle
+minio
+torchvision
+fastapi
+uvicorn
