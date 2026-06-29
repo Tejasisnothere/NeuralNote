@@ -31,3 +31,4 @@ minio
 torchvision
 fastapi
 uvicorn
+watchdog

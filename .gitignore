@@ -141,6 +141,10 @@ venv.bak/
 .ropeproject
 
 .pdf 
+.png
+.jpeg
+.jpg
+.webp
 # mkdocs documentation
 /site
 

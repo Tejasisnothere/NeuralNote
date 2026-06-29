@@ -28,7 +28,7 @@ class PDFIngestor:
 
             chunks = self.splitter.split_text(text=text)
             docs = [Document(page_content=chunk, metadata={"page_no":page.metadata['page'], "file_name":file_name}) for chunk in chunks]
-            ids = [int(str(file_unique_id)+str(idx)+str(i)) for i in range(len(chunks))]
+            ids = [int(str(file_unique_id)+str(00)+str(idx)+str(00)+str(i)) for i in range(len(chunks))]
 
             pdf_vector_store.add_documents(documents=docs, ids=ids)
 
