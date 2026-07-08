@@ -16,9 +16,20 @@ class GenerateTopics(BaseModel):
 
 
 class MainState(TypedDict):
-    planned_topics: List[str] = Field(description="")
+    query: str = Field(description="Intial User query for notes generation on certain topic")
+    refined_query: str = Field(description="Refined description of user query more detailed")
+
+    user_docs: List[str] = Field(description="Name of documents uploaded by the user for reference")
+
+
+    retrieval_priority: List[str] = Field(description="Increasing order of priority for refering stores for retrieval.")
+    retreival_priority_confidence: List[int]
+
+
+    subtopics: List[str] = Field(description="List of subtopics planned for note generation")
     
-    user_query: str = Field(description="Query entered by user.")
+    
+
 
 
     
