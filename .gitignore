@@ -140,11 +140,16 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-.pdf 
-.png
-.jpeg
-.jpg
-.webp
+
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.pdf
+*.mp4
+*.part
+
+
 # mkdocs documentation
 /site
 
