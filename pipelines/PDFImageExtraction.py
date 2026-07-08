@@ -10,7 +10,9 @@ from langchain_classic.schema import Document
 from zlib import crc32
 
 class PDFImageExtractor:
+    """Image Extraction from a pdf and store to /images/ and image image store"""
     def __init__(self, client_address, bucket_name="neuralnote-images"):
+
         self.embedding_model = embedding_model
         self.client = Minio(client_address, access_key="admin", secret_key="password123", secure=False)
         self.base_path = os.path.join(os.getcwd(), "data")

@@ -1,1 +1,0 @@
-# Guides through pdf teaches the user 
