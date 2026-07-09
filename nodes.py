@@ -5,6 +5,9 @@ from llms import llm_llama
 from pydantic import BaseModel, Field
 from state import MainState
 from typing import List
+import os
+
+DATA_PATH = os.path.join(os.getcwd(), 'data')
 
 
 class Topic(BaseModel):
@@ -16,7 +19,7 @@ class SubTopics(BaseModel):
 
 class PriorityRetreival(BaseModel):
     retrieval_priority: List[str] = Field(description="List of in order pirority of documents for retreival.")
-    retrieval_priority_confidence: List[float] = Field(description="In order confidence for each document priority.")
+    retrieval_priority_score: List[float] = Field(description="In order score for each document priority.")
 
 
 
@@ -80,6 +83,19 @@ def generate_subtopics(topic: str):
     return new_llm.invoke(topic).subtopics
 
 
+def get_user_docs(state: MainState)->MainState:
+    from pathlib import Path
+
+    USER_DOCS = os.path.join(DATA_PATH, 'user_docs')
+
+    folder = Path(USER_DOCS)
+
+    files = [file.name for file in folder.iterdir() if file.is_file()]
+
+    
+
+    return {'user_docs':files}
+
 
 def prioritize_retrieval(state: MainState)->MainState:
     new_llm = llm_llama.with_structured_output(PriorityRetreival)
@@ -113,7 +129,8 @@ For every source provide:
 1. Source name
 2. Source type ("user" or "system")
 3. Priority (1 = highest)
-4. Confidence score between 0.0 and 1.0
+4. score between 0.0 and 1.0 based on the requirement of the document.
+5. Even if not mentioned score each of the potential retrieval sources.
 
 """
     )
@@ -121,7 +138,10 @@ For every source provide:
     chain = prompt | new_llm
     response =  chain.invoke({'refined_prompt':state['refined_query'], 'user_docs':state['user_docs']})
 
+    
     return {
         'retrieval_priority':response.retrieval_priority,
-        'retrieval_priority_confidence':response.retrieval_priority_confidence
+        'retrieval_priority_score':response.retrieval_priority_score
     }
+
+

@@ -23,7 +23,7 @@ class MainState(TypedDict):
 
 
     retrieval_priority: List[str] = Field(description="Increasing order of priority for refering stores for retrieval.")
-    retreival_priority_confidence: List[int]
+    retrieval_priority_score: List[int]
 
 
     subtopics: List[str] = Field(description="List of subtopics planned for note generation")
