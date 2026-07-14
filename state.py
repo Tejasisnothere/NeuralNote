@@ -27,7 +27,18 @@ class MainState(TypedDict):
     retrieval_priority_score: List[int]
 
 
+    ingested_docs: List[str] = Field(description="List of all ingested documents")
+
+
+
+
     subtopics: List[str] = Field(description="List of subtopics planned for note generation")
+
+
+
+
+## Eventually wed make automatic query retriever basic thought process -> subtopic -> planner (plans subtopics of subtopics) -> smart retreiver(generates queries for retrieving theese subtopics) -> retreives
+
     
     
     

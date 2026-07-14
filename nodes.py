@@ -168,3 +168,6 @@ For every source provide:
     }
 
 
+
+def ingestion_node(state:MainState)->MainState:
+    
