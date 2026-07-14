@@ -20,6 +20,7 @@ class MainState(TypedDict):
     refined_query: str = Field(description="Refined description of user query more detailed")
 
     user_docs: List[str] = Field(description="Name of documents uploaded by the user for reference")
+    links: List[str] = Field(description="Links provided by the user could potentially be (blogs, wikipedia, etc)")
 
 
     retrieval_priority: List[str] = Field(description="Increasing order of priority for refering stores for retrieval.")
@@ -27,6 +28,7 @@ class MainState(TypedDict):
 
 
     subtopics: List[str] = Field(description="List of subtopics planned for note generation")
+    
     
     
 

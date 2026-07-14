@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 from state import MainState
 from typing import List
 import os
+import re
+
 
 DATA_PATH = os.path.join(os.getcwd(), 'data')
 
@@ -64,6 +66,10 @@ User Query:
 
     subtopics = generate_subtopics(topic)
 
+    
+
+    
+
 
 
 
@@ -71,6 +77,23 @@ User Query:
     return {'refined_query' : response,
             'topic': topic,
             'subtopics':subtopics}
+
+
+def extract_links(state: MainState)->MainState:
+    user_docs = state['retrieval_priority']
+
+    print(user_docs)
+    print("\n\n\n\n\n")
+    links = []
+    for i in user_docs:
+        initial = i[:4]
+        
+        if initial == 'http':
+            links.append(i)
+    
+
+
+    return {'links':links}
 
 
 def extract_topic(query: str) -> str:

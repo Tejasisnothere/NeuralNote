@@ -19,6 +19,7 @@ graph = StateGraph(MainState)
 
 graph.add_node('refine_query_node', refine_query_node)
 graph.add_node('get_user_docs', get_user_docs)
+graph.add_node('extract_links', extract_links)
 graph.add_node('prioritize_retrieval', prioritize_retrieval)
 
 
@@ -32,7 +33,8 @@ graph.add_edge(START, 'refine_query_node')
 
 graph.add_edge('refine_query_node','get_user_docs')
 graph.add_edge('get_user_docs', 'prioritize_retrieval')
-graph.add_edge('prioritize_retrieval', END)
+graph.add_edge('prioritize_retrieval', 'extract_links')
+graph.add_edge('extract_links', END)
 
 
 
