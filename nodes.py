@@ -4,6 +4,7 @@ from langchain_core.output_parsers import StrOutputParser
 from llms import llm_llama
 from pydantic import BaseModel, Field
 from state import MainState
+from utils.logger import logger
 from typing import List
 import os
 import re
@@ -31,6 +32,7 @@ def refine_query_node(state: MainState) -> MainState:
     """Refines the user query for effecient understanding by LLM for note making for relevant topic."""
 
     
+    logger.info("Refining user query....")
     
     prompt = PromptTemplate.from_template(
             """
@@ -62,7 +64,17 @@ User Query:
 
     chain = prompt | llm_llama | StrOutputParser()
 
-    response = chain.invoke({'user_query':query})
+    logger.info("Calling llama-3.3-70b-versatile....")
+    try:
+
+
+        response = chain.invoke({'user_query':query})
+    
+    except Exception as e:
+        logger.error("LLm call failed", e)
+        return {}
+    
+    logger.info("LLM call succeeded.")
 
     topic = extract_topic(query)
 
@@ -84,6 +96,8 @@ User Query:
 def extract_links(state: MainState)->MainState:
     user_docs = state['retrieval_priority']
 
+    logger.info("Extracting links")
+
     print(user_docs)
     print("\n\n\n\n\n")
     links = []
@@ -99,23 +113,55 @@ def extract_links(state: MainState)->MainState:
 
 
 def extract_topic(query: str) -> str:
-    new_llm = llm_llama.with_structured_output(Topic)
+    logger.info("Extracting topic")
+
+    logger.info("Calling LLM")
+
+    try:
+
+        new_llm = llm_llama.with_structured_output(Topic)
+    except Exception as e:
+        logger.error("LLM call failed", e)
+
+        return ""
+    
+    logger.info("LLM call succeeded")
+
     return new_llm.invoke(query).topic
 
 
 def generate_subtopics(topic: str):
-    new_llm = llm_llama.with_structured_output(SubTopics)
-    return new_llm.invoke(topic).subtopics
+
+    logger.info("Generating subtopics")
+
+    try:
+        logger.info("Calling LLM....")
+        new_llm = llm_llama.with_structured_output(SubTopics)
+        subtopics = new_llm.invoke(topic).subtopics
+
+    except Exception as e:
+        logger.error("LLM call failed.\n", e)
+        return []
+    
+    return subtopics
 
 
 def get_user_docs(state: MainState)->MainState:
     from pathlib import Path
 
+    logger.info("Fetching docs provided by the user.")
+
     USER_DOCS = os.path.join(DATA_PATH, 'user_docs')
 
     folder = Path(USER_DOCS)
 
-    files = [file.name for file in folder.iterdir() if file.is_file()]
+    try:
+
+        files = [file.name for file in folder.iterdir() if file.is_file()]
+
+    except Exception as e:
+        logger.error("Failed to fetch docs.\n", e)
+        return {'user_docs':[]}
 
     
 
@@ -124,6 +170,8 @@ def get_user_docs(state: MainState)->MainState:
 
 def prioritize_retrieval(state: MainState)->MainState:
     new_llm = llm_llama.with_structured_output(PriorityRetreival)
+
+    logger.info("Deciding retrieval priority.")
 
     prompt = PromptTemplate.from_template(
         """
@@ -161,8 +209,14 @@ For every source provide:
     )
 
     chain = prompt | new_llm
-    response =  chain.invoke({'refined_prompt':state['refined_query'], 'user_docs':state['user_docs']})
 
+    logger.info("Calling LLM. ")
+
+    try:
+        response =  chain.invoke({'refined_prompt':state['refined_query'], 'user_docs':state['user_docs']})
+    except Exception as e:
+        logger.error("LLM call failed.\n", e)
+        return {}
     
     return {
         'retrieval_priority':response.retrieval_priority,
@@ -171,5 +225,5 @@ For every source provide:
 
 
 
-def ingestion_node(state:MainState)->MainState:
+
     
