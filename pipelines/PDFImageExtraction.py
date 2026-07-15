@@ -99,5 +99,5 @@ class PDFImageExtractor:
 
 
 
-instance = PDFImageExtractor("localhost:9000")
-instance.extract_and_store_images('blackholes.pdf')
+# instance = PDFImageExtractor("localhost:9000")
+# instance.extract_and_store_images('blackholes.pdf')

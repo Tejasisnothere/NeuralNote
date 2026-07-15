@@ -29,6 +29,8 @@ class PriorityRetreival(BaseModel):
 
 def refine_query_node(state: MainState) -> MainState:
     """Refines the user query for effecient understanding by LLM for note making for relevant topic."""
+
+    
     
     prompt = PromptTemplate.from_template(
             """

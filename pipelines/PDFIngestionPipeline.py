@@ -34,13 +34,13 @@ class PDFIngestor:
 
 
 
-pdi = PDFIngestor()
+# pdi = PDFIngestor()
 
-pdi.ingestPDF("Tejas_Kadam_Resume.pdf")
+# pdi.ingestPDF("Tejas_Kadam_Resume.pdf")
 
 
             
         
 
 
-print(PDF_PATH)
+# print(PDF_PATH)
