@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 from state import MainState
 from utils.logger import logger
 from typing import List
+
+from tools import ingestion_tools
 import os
 import re
 
@@ -225,5 +227,31 @@ For every source provide:
 
 
 
+def ingestion_router(state: MainState)->str:
+    if(state['ingestion_index']<len(state['userdocs'])):
+        return 'tool_call'
+    else:
+        return 'retrieval_planner'
+
+
+def ingestion_agent(state: MainState)->MainState:
+    idx = state['ingestion_index']
+    state['ingestion_index'] += 1
+    ingested_docs = state['ingested_docs']
+
+    current_doc = ingested_docs[idx]
 
     
+
+    binded_llm = llm_llama.bind_tools(tools=ingestion_tools)
+
+
+
+
+
+
+
+
+
+def retrieval_planner(state:MainState)->MainState:
+    return {}

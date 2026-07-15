@@ -29,6 +29,7 @@ class MainState(TypedDict):
 
     ingested_docs: List[str] = Field(description="List of all ingested documents")
 
+    ingestion_index: int
 
 
 

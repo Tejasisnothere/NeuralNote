@@ -1,7 +1,7 @@
 from langchain_community.document_loaders import PyMuPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_classic.schema import Document
-from vector_storage.pdf_vector_store import pdf_vector_store
+from pipelines.vector_storage.pdf_vector_store import pdf_vector_store
 import os
 import zlib
 PDF_PATH = os.path.join(os.getcwd(), 'data', 'pdfs')

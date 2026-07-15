@@ -11,6 +11,8 @@ from pipelines.vector_storage.yt_vector_store import transcript_vector_store
 
 
 
+
+
 @tool
 def intiate_blog_storage_pipeline(link: str):
     """Initiates the blog storage pipeline and stores documents with respect to the provided link into the vectorstore"""
@@ -52,5 +54,8 @@ def PDF_extraction_storage_pipeline(filename: str):
 
 
 
+
+
+ingestion_tools = [intiate_blog_storage_pipeline, intiate_blog_storage_pipeline, PDF_extraction_storage_pipeline]
 
 

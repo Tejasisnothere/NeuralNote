@@ -1,7 +1,7 @@
 from pinecone import Pinecone
 from langchain_pinecone import PineconeVectorStore
 import os
-from embedding.embedder import embedding_model
+from pipelines.embedding.embedder import embedding_model
 from dotenv import load_dotenv
 load_dotenv()
 

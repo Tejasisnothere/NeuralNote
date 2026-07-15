@@ -1,9 +1,6 @@
-from ingestion.YoutubeTranscriptIngestor import YTVideoFetcher
-from ingestion.BlogIngestor import fetch_and_chunk
-from embedding.embedder import embedding_model
-from vector_storage.yt_vector_store import transcript_vector_store, blog_vector_store
-from processor.TranscriptProcessor import NormalizeChunks
-from processor.BlogChunksProcessor import normalize_chunks
+from pipelines.ingestion.BlogIngestor import fetch_and_chunk
+from pipelines.vector_storage.blog_vector_store import blog_vector_store
+from pipelines.processor.BlogChunksProcessor import normalize_chunks
 from uuid import uuid4
 
 class BlogStoragePipeline:

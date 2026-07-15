@@ -42,7 +42,8 @@ builder = graph.compile()
 
 
 final_state = builder.invoke({'query':"Generate comprehensive notes on Reinforcement Learning. Use my uploaded RL Lecture Notes.pdf first, then supplement with Wikipedia and YouTube transcripts wherever necessary. also i have this https://blog.ml.cmu.edu/category/reinforcement-learning/",
-                              'user_docs':[]})
+                              'user_docs':[],
+                              'ingestion_index':0})
 
 
 print(final_state)

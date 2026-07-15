@@ -1,10 +1,10 @@
 import fitz  
-from embedding.embedder import embedding_model
+from pipelines.embedding.embedder import embedding_model
 from minio import Minio
 import os
 from pathlib import Path
 import requests
-from vector_storage.pdf_vector_store import pdf_vector_store
+from pipelines.vector_storage.pdf_vector_store import pdf_vector_store
 from concurrent.futures import ThreadPoolExecutor
 from langchain_classic.schema import Document
 from zlib import crc32
