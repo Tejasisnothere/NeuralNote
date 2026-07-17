@@ -102,6 +102,7 @@ def extract_links(state: MainState)->MainState:
 
     logger.info("Extracting links")
 
+    print("FIRST")
     print(user_docs)
     print("\n\n\n\n\n")
     links = []
@@ -227,50 +228,81 @@ For every source provide:
     }
 
 
-    
+def empty_node(state:MainState):
+    return {}
 
 
 
 def ingestion_agent(state: MainState)->MainState:
     idx = state['ingestion_index']
-    state['ingestion_index'] += 1
-    ingested_docs = state['user_docs']
+    
+    ingested_docs = state['retrieval_priority']
+
+    print(ingested_docs)
+    print('\n\n\n')
 
     current_doc = ingested_docs[idx]
 
-    prompt = PromptTemplate.from_template("""You are an ingestion planning agent.
+    prompt = PromptTemplate.from_template("""You are an **Ingestion Planning Agent**.
 
-Your job is to decide whether the current document is useful for the user's learning goal.
+Your job is to decide whether the current document should be ingested into the knowledge base for the user's request.
 
-If the document is useful,
-call exactly one ingestion tool.
+Carefully analyze **both the user's objective and any explicit preferences or constraints** before making a decision.
 
-If it is NOT useful,
-DO NOT call any tool.
+### Decision Rules
 
-Instead respond with exactly:
+1. Determine whether the document is relevant to the user's learning goal.
+2. Respect all user preferences and restrictions. Examples include:
 
-SKIP
+   * Preferred sources (e.g., blogs, Wikipedia, research papers).
+   * Excluded sources (e.g., "Do not use PDFs", "Avoid YouTube").
+   * Scope limitations (e.g., beginner only, advanced only).
+   * Topic-specific requirements.
+3. If the document satisfies the user's request **and** matches their preferences, call **exactly one** appropriate ingestion tool.
+4. If the document violates any user constraint, is unrelated, redundant, or provides negligible value, **do not call any tool**.
 
-Never ingest irrelevant or redundant documents.
-    
-    User query: {query} \n\n
+Instead, respond with exactly:
 
-    Current document: {document}
-  
+`SKIP`
+
+### Important Rules
+
+* Call **at most one** tool.
+* Never call multiple tools.
+* Do not explain your reasoning.
+* Do not summarize the document.
+* Output only a tool call or `SKIP`.
+
+---
+
+**User Query**
+
+{query}
+
+---
+
+**Current Document**
+
+{document}
+
     """
     )
 
 
 
-    binded_llm = llm_llama.bind_tools(tools=ingestion_tools)
+    binded_llm = llm_llama.bind_tools(ingestion_tools)
 
     chain = prompt | binded_llm
 
     response = chain.invoke({'query':state['query'], 'document':current_doc})
-
     print(response)
+
+    print("\n\n\n\n\n")
     
+
+    return {
+        "ingestion_index": idx+1
+    }
 
 
 

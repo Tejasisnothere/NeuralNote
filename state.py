@@ -31,7 +31,7 @@ class MainState(TypedDict):
 
     ingestion_index: int
 
-
+    tool_calls: List = Field(description="List of all tool calls made")
 
     subtopics: List[str] = Field(description="List of subtopics planned for note generation")
 

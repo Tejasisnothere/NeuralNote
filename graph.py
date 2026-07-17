@@ -26,7 +26,7 @@ graph.add_node('extract_links', extract_links)
 graph.add_node('prioritize_retrieval', prioritize_retrieval)
 graph.add_node('ingestion_agent',ingestion_agent)
 graph.add_node('retrieval_initiator',retrieval_initiator)
-
+graph.add_node('empty_node',empty_node)
 
 print('nodes')
 
@@ -41,8 +41,9 @@ graph.add_edge(START, 'refine_query_node')
 graph.add_edge('refine_query_node','get_user_docs')
 graph.add_edge('get_user_docs', 'prioritize_retrieval')
 graph.add_edge('prioritize_retrieval', 'extract_links')
+graph.add_edge('extract_links','empty_node')
 graph.add_conditional_edges(
-    "extract_links",
+    "empty_node",
     ingestion_router,
     {
         "tool_call":'ingestion_agent',
@@ -50,8 +51,10 @@ graph.add_conditional_edges(
     }
 
 )
+graph.add_edge('ingestion_agent', 'empty_node')
 
-print('edges')
+graph.add_edge('empty_node', END)
+
 
 
 
@@ -65,7 +68,9 @@ print('builder')
 
 final_state = builder.invoke({'query':"I want you to generate notes on reinforcement learning. Do not use any pdfs, nor any youtube videos. use this link https://lilianweng.github.io/posts/2018-02-19-rl-overview/",
                               'user_docs':[],
-                              'ingestion_index':0})
+                              'ingestion_index':0,
+                              'retrieval_priority':[],
+                              'retrieval_priority_score':[]})
 
 
 
