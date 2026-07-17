@@ -12,6 +12,8 @@ import os
 import re
 
 
+
+
 DATA_PATH = os.path.join(os.getcwd(), 'data')
 
 
@@ -164,7 +166,6 @@ def get_user_docs(state: MainState)->MainState:
     except Exception as e:
         logger.error("Failed to fetch docs.\n", e)
         return {'user_docs':[]}
-
     
 
     return {'user_docs':files}
@@ -226,25 +227,50 @@ For every source provide:
     }
 
 
+    
 
-def ingestion_router(state: MainState)->str:
-    if(state['ingestion_index']<len(state['userdocs'])):
-        return 'tool_call'
-    else:
-        return 'retrieval_planner'
 
 
 def ingestion_agent(state: MainState)->MainState:
     idx = state['ingestion_index']
     state['ingestion_index'] += 1
-    ingested_docs = state['ingested_docs']
+    ingested_docs = state['user_docs']
 
     current_doc = ingested_docs[idx]
 
+    prompt = PromptTemplate.from_template("""You are an ingestion planning agent.
+
+Your job is to decide whether the current document is useful for the user's learning goal.
+
+If the document is useful,
+call exactly one ingestion tool.
+
+If it is NOT useful,
+DO NOT call any tool.
+
+Instead respond with exactly:
+
+SKIP
+
+Never ingest irrelevant or redundant documents.
     
+    User query: {query} \n\n
+
+    Current document: {document}
+  
+    """
+    )
+
+
 
     binded_llm = llm_llama.bind_tools(tools=ingestion_tools)
 
+    chain = prompt | binded_llm
+
+    response = chain.invoke({'query':state['query'], 'document':current_doc})
+
+    print(response)
+    
 
 
 
@@ -253,5 +279,13 @@ def ingestion_agent(state: MainState)->MainState:
 
 
 
-def retrieval_planner(state:MainState)->MainState:
+
+def retrieval_initiator(state:MainState)->MainState:
+
+    print("Retrieval initiator started")
     return {}
+
+
+
+
+
