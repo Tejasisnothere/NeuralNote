@@ -3,9 +3,9 @@ from langchain_classic.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from llms import llm_llama
 from pydantic import BaseModel, Field
-from state import MainState
+from state import MainState, RetriGenState
 from utils.logger import logger
-from typing import List
+from typing import List, Literal
 
 from tools import ingestion_tools
 import os
@@ -311,11 +311,7 @@ Instead, respond with exactly:
 
 
 
-
-def retrieval_initiator(state:MainState)->MainState:
-
-    print("Retrieval initiator started")
-    return {}
+    
 
 
 

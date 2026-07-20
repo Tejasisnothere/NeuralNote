@@ -19,6 +19,8 @@ class MainState(TypedDict):
     query: str = Field(description="Intial User query for notes generation on certain topic")
     refined_query: str = Field(description="Refined description of user query more detailed")
 
+    topic: str = Field(description="User's topic of interest")
+
     user_docs: List[str] = Field(description="Name of documents uploaded by the user for reference")
     links: List[str] = Field(description="Links provided by the user could potentially be (blogs, wikipedia, etc)")
 
@@ -29,9 +31,12 @@ class MainState(TypedDict):
 
     ingested_docs: List[str] = Field(description="List of all ingested documents")
 
-    ingestion_index: int
+    ingestion_index: int = 0
 
     tool_calls: List = Field(description="List of all tool calls made")
+
+    topics_index: int = 0
+
 
     subtopics: List[str] = Field(description="List of subtopics planned for note generation")
 
@@ -46,4 +51,18 @@ class MainState(TypedDict):
 
 
 
+
+class RetriGenState(TypedDict):
+    query: str = Field(description="query to retrieve documents from vector store")
+
+    topic: str = Field(description="current topic to generate")
+
+    section_plan: List
+
+    current_index: int
+
+
+
     
+
+

@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 import os
 from dotenv import load_dotenv
-from state import MainState
+from state import MainState, RetriGenState
 from nodes import *
 from routers import *
 
@@ -19,6 +19,10 @@ print("key")
 
 graph = StateGraph(MainState)
 
+regen_graph = StateGraph(RetriGenState)
+
+regen_graph.add_node('')
+
 
 graph.add_node('refine_query_node', refine_query_node)
 graph.add_node('get_user_docs', get_user_docs)
@@ -27,12 +31,6 @@ graph.add_node('prioritize_retrieval', prioritize_retrieval)
 graph.add_node('ingestion_agent',ingestion_agent)
 graph.add_node('retrieval_initiator',retrieval_initiator)
 graph.add_node('empty_node',empty_node)
-
-print('nodes')
-
-
-
-
 
 
 graph.add_edge(START, 'refine_query_node')

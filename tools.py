@@ -73,6 +73,8 @@ def Wikipedia_extraction_storage_pipeline(topic: str):
 
 
 
+
+
 ingestion_tools = [intiate_blog_storage_pipeline, intiate_blog_storage_pipeline, PDF_extraction_storage_pipeline, Wikipedia_extraction_storage_pipeline]
 
 
